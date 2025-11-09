@@ -39,7 +39,7 @@ def load_products_cache():
 # 🧩 Streamlit Başlangıç
 # ------------------------------
 st.set_page_config(page_title="Trendyol Satış Dashboard", layout="wide")
-st.title("🔰​ Trendyol Satış Dashboard")
+st.title("📦 Trendyol Satış Dashboard")
 
 # ------------------------------
 # 📅 Tarih Aralığı Seçimi
@@ -52,7 +52,10 @@ end_date = st.sidebar.date_input("Bitiş Tarihi", datetime.now())
 # 🗂️ Sipariş Durumu Seçimi
 # ------------------------------
 st.sidebar.header("Sipariş Durumu")
-status_option = st.sidebar.selectbox("Durum Seçin", ["All"])
+status_option = st.sidebar.selectbox(
+    "Durum Seçin",
+    ["All"]
+)
 
 statuses_to_fetch = (
     ["Created", "Shipped", "Delivered", "Invoiced", "Picking"]
@@ -159,7 +162,9 @@ if st.sidebar.button("Verileri Getir"):
         .reset_index(drop=True)
     )
 
+    # ------------------------------
     # 🧾 Özet Bilgiler
+    # ------------------------------
     toplam_ciro = df_grouped["ciro"].sum()
     toplam_adet = df_grouped["quantity"].sum()
     toplam_urun = len(df_grouped)
@@ -173,73 +178,88 @@ if st.sidebar.button("Verileri Getir"):
     st.divider()
 
     # ------------------------------
-    # 🔝 En Çok Satan Marka ve Kategori (Top 10)
+    # 💳 Top 10 Marka Kartı
     # ------------------------------
-    if not df_grouped.empty:
-        # Top 10 Marka
-        top_brands = (
-            df_grouped.groupby("brand", as_index=False)
-            .agg({"quantity": "sum", "ciro": "sum"})
-            .sort_values(by="quantity", ascending=False)
-            .head(10)
-            .reset_index(drop=True)
-        )
+    top_brands = (
+        df_grouped.groupby("brand", as_index=False)
+        .agg({"quantity": "sum", "ciro": "sum"})
+        .sort_values(by="quantity", ascending=False)
+        .head(10)
+        .reset_index(drop=True)
+    )
 
-        # Top 10 Kategori
-        top_categories = (
-            df_grouped.groupby("categoryName", as_index=False)
-            .agg({"quantity": "sum", "ciro": "sum"})
-            .sort_values(by="quantity", ascending=False)
-            .head(10)
-            .reset_index(drop=True)
-        )
+    st.markdown(
+        f"""
+        <div style="
+            background-color:#f8f9fa;
+            border-radius:16px;
+            padding:16px;
+            margin-bottom:20px;
+            box-shadow:0 2px 5px rgba(0,0,0,0.1);
+            border:1px solid #ddd;
+            font-family:sans-serif;
+        ">
+            <div style="display:flex; font-weight:bold; border-bottom:1px solid #ccc; padding-bottom:8px; margin-bottom:8px; font-size:16px;">
+                <div style="flex:1; text-align:left;">Marka</div>
+                <div style="flex:1; text-align:center;">Adet</div>
+                <div style="flex:1; text-align:right;">Satış</div>
+            </div>
+            {"".join([
+                f'<div style="display:flex; padding:4px 0; font-size:14px;">'
+                f'<div style="flex:1; text-align:left;">{row["brand"]}</div>'
+                f'<div style="flex:1; text-align:center;">{int(row["quantity"])}</div>'
+                f'<div style="flex:1; text-align:right;">{row["ciro"]:,.2f} TL</div>'
+                f'</div>'
+                for idx, row in top_brands.iterrows()
+            ])}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-        # Kartları üst kısımda göster
-        col1, col2 = st.columns(2)
+    # ------------------------------
+    # 💳 Top 10 Kategori Kartı
+    # ------------------------------
+    top_categories = (
+        df_grouped.groupby("categoryName", as_index=False)
+        .agg({"quantity": "sum", "ciro": "sum"})
+        .sort_values(by="quantity", ascending=False)
+        .head(10)
+        .reset_index(drop=True)
+    )
 
-        # En Çok Satan Marka Kartı
-        with col1:
-            st.markdown(
-                f"""
-                <div style="
-                    background-color: #ffdede;
-                    border-radius: 16px;
-                    padding: 24px;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                    <h3 style="text-align:center;">🏆 En Çok Satan Marka</h3>
-                """ +
-                "".join([
-                    f"<p style='margin:4px 0; font-size:18px;'>{idx+1} - {row['brand']} | {int(row['quantity'])} Adet | {row['ciro']:,.2f} TL</p>"
-                    f"<hr style='margin:2px 0; border:0.5px solid #ccc;'>"
-                    for idx, row in top_brands.iterrows()
-                ]) +
-                "</div>",
-                unsafe_allow_html=True
-            )
+    st.markdown(
+        f"""
+        <div style="
+            background-color:#f8f9fa;
+            border-radius:16px;
+            padding:16px;
+            margin-bottom:20px;
+            box-shadow:0 2px 5px rgba(0,0,0,0.1);
+            border:1px solid #ddd;
+            font-family:sans-serif;
+        ">
+            <div style="display:flex; font-weight:bold; border-bottom:1px solid #ccc; padding-bottom:8px; margin-bottom:8px; font-size:16px;">
+                <div style="flex:1; text-align:left;">Kategori</div>
+                <div style="flex:1; text-align:center;">Adet</div>
+                <div style="flex:1; text-align:right;">Satış</div>
+            </div>
+            {"".join([
+                f'<div style="display:flex; padding:4px 0; font-size:14px;">'
+                f'<div style="flex:1; text-align:left;">{row["categoryName"]}</div>'
+                f'<div style="flex:1; text-align:center;">{int(row["quantity"])}</div>'
+                f'<div style="flex:1; text-align:right;">{row["ciro"]:,.2f} TL</div>'
+                f'</div>'
+                for idx, row in top_categories.iterrows()
+            ])}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-        # En Çok Satan Kategori Kartı
-        with col2:
-            st.markdown(
-                f"""
-                <div style="
-                    background-color: #def5ff;
-                    border-radius: 16px;
-                    padding: 24px;
-                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                    <h3 style="text-align:center;">🏆 En Çok Satan Kategori</h3>
-                """ +
-                "".join([
-                    f"<p style='margin:4px 0; font-size:18px;'>{idx+1} - {row['categoryName']} | {int(row['quantity'])} Adet | {row['ciro']:,.2f} TL</p>"
-                    f"<hr style='margin:2px 0; border:0.5px solid #ccc;'>"
-                    for idx, row in top_categories.iterrows()
-                ]) +
-                "</div>",
-                unsafe_allow_html=True
-            )
-
-    st.divider()
-
+    # ------------------------------
     # 💳 Ürün Kartları
+    # ------------------------------
     for i in range(0, len(df_grouped), 5):
         cols = st.columns(5)
         for j, col in enumerate(cols):
@@ -257,7 +277,7 @@ if st.sidebar.button("Verileri Getir"):
                             border: 1px solid #ddd;
                             text-align: center;">
                             <img src="{row['image']}" width="120" style="border-radius:8px; margin-bottom:10px;">
-                            <p style="color:#333;"><b>{row['productMainId']}</b></p>
+                            <p style="color:#333;">{row['productMainId']}</p>
                             <p style="color:#555;">{row['brand']}</p>
                             <p><b>Satış Adedi:</b> {int(row['quantity'])}</p>
                             <p><b>Ciro:</b> {row['ciro']:,.2f} ₺</p>
