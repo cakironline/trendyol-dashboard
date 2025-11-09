@@ -39,7 +39,7 @@ def load_products_cache():
 # 🧩 Streamlit Başlangıç
 # ------------------------------
 st.set_page_config(page_title="Trendyol Satış Dashboard", layout="wide")
-st.title("📦 Trendyol Satış Dashboard")
+st.title("⚡ Trendyol Satış Dashboard")
 
 # ------------------------------
 # 📅 Tarih Aralığı Seçimi
