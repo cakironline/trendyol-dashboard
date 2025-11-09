@@ -24,7 +24,7 @@ PARQUET_FILE = "urunler_ty.parquet"
 def load_products_cache():
     """Parquet varsa oradan oku, yoksa Excel’den oku."""
     if os.path.exists(PARQUET_FILE):
-        st.info("💽 Ürün verisi Parquet'ten okunuyor...")
+        st.info("💽 Ürün verisi alınıyor...")
         return pd.read_parquet(PARQUET_FILE)
     elif os.path.exists(EXCEL_FILE):
         st.info("📗 Ürün verisi Excel'den okunuyor...")
