@@ -52,11 +52,7 @@ end_date = st.sidebar.date_input("Bitiş Tarihi", datetime.now())
 # 🗂️ Sipariş Durumu Seçimi
 # ------------------------------
 st.sidebar.header("Sipariş Durumu")
-status_option = st.sidebar.selectbox(
-    "Durum Seçin",
-    ["All"]
-)
-
+status_option = st.sidebar.selectbox("Durum Seçin", ["All"])
 statuses_to_fetch = (
     ["Created", "Shipped", "Delivered", "Invoiced", "Picking"]
     if status_option == "All"
@@ -162,9 +158,7 @@ if st.sidebar.button("Verileri Getir"):
         .reset_index(drop=True)
     )
 
-    # ------------------------------
     # 🧾 Özet Bilgiler
-    # ------------------------------
     toplam_ciro = df_grouped["ciro"].sum()
     toplam_adet = df_grouped["quantity"].sum()
     toplam_urun = len(df_grouped)
@@ -178,7 +172,7 @@ if st.sidebar.button("Verileri Getir"):
     st.divider()
 
     # ------------------------------
-    # 💳 Top 10 Marka Kartı
+    # 💳 Top 10 Marka ve Kategori Kartları Yan Yana
     # ------------------------------
     top_brands = (
         df_grouped.groupby("brand", as_index=False)
@@ -188,38 +182,6 @@ if st.sidebar.button("Verileri Getir"):
         .reset_index(drop=True)
     )
 
-    st.markdown(
-        f"""
-        <div style="
-            background-color:#f8f9fa;
-            border-radius:16px;
-            padding:16px;
-            margin-bottom:20px;
-            box-shadow:0 2px 5px rgba(0,0,0,0.1);
-            border:1px solid #ddd;
-            font-family:sans-serif;
-        ">
-            <div style="display:flex; font-weight:bold; border-bottom:1px solid #ccc; padding-bottom:8px; margin-bottom:8px; font-size:16px;">
-                <div style="flex:1; text-align:left;">Marka</div>
-                <div style="flex:1; text-align:center;">Adet</div>
-                <div style="flex:1; text-align:right;">Satış</div>
-            </div>
-            {"".join([
-                f'<div style="display:flex; padding:4px 0; font-size:14px;">'
-                f'<div style="flex:1; text-align:left;">{row["brand"]}</div>'
-                f'<div style="flex:1; text-align:center;">{int(row["quantity"])}</div>'
-                f'<div style="flex:1; text-align:right;">{row["ciro"]:,.2f} TL</div>'
-                f'</div>'
-                for idx, row in top_brands.iterrows()
-            ])}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    # ------------------------------
-    # 💳 Top 10 Kategori Kartı
-    # ------------------------------
     top_categories = (
         df_grouped.groupby("categoryName", as_index=False)
         .agg({"quantity": "sum", "ciro": "sum"})
@@ -228,34 +190,43 @@ if st.sidebar.button("Verileri Getir"):
         .reset_index(drop=True)
     )
 
-    st.markdown(
-        f"""
-        <div style="
-            background-color:#f8f9fa;
-            border-radius:16px;
-            padding:16px;
-            margin-bottom:20px;
-            box-shadow:0 2px 5px rgba(0,0,0,0.1);
-            border:1px solid #ddd;
-            font-family:sans-serif;
-        ">
-            <div style="display:flex; font-weight:bold; border-bottom:1px solid #ccc; padding-bottom:8px; margin-bottom:8px; font-size:16px;">
-                <div style="flex:1; text-align:left;">Kategori</div>
-                <div style="flex:1; text-align:center;">Adet</div>
-                <div style="flex:1; text-align:right;">Satış</div>
+    col1, col2 = st.columns(2)
+
+    def render_top10_card(title, df_top, col1_name):
+        st.markdown(
+            f"""
+            <div style="
+                background-color:#f8f9fa;
+                border-radius:16px;
+                padding:16px;
+                margin-bottom:20px;
+                box-shadow:0 2px 5px rgba(0,0,0,0.1);
+                border:1px solid #ddd;
+                font-family:sans-serif;
+            ">
+                <div style="font-weight:bold; font-size:18px; margin-bottom:10px;">{title}</div>
+                <div style="display:flex; font-weight:bold; border-bottom:1px solid #ccc; padding-bottom:6px; margin-bottom:6px; font-size:16px;">
+                    <div style="flex:1; text-align:left;">{col1_name}</div>
+                    <div style="flex:1; text-align:center;">Adet</div>
+                    <div style="flex:1; text-align:right;">Satış</div>
+                </div>
+                {"".join([
+                    f'<div style="display:flex; padding:2px 0; font-size:14px;">'
+                    f'<div style="flex:1; text-align:left;">{row[0]}</div>'
+                    f'<div style="flex:1; text-align:center;">{int(row[1])}</div>'
+                    f'<div style="flex:1; text-align:right;">{row[2]:,.2f} TL</div>'
+                    f'</div>'
+                    for row in df_top.itertuples(index=False, name=None)
+                ])}
             </div>
-            {"".join([
-                f'<div style="display:flex; padding:4px 0; font-size:14px;">'
-                f'<div style="flex:1; text-align:left;">{row["categoryName"]}</div>'
-                f'<div style="flex:1; text-align:center;">{int(row["quantity"])}</div>'
-                f'<div style="flex:1; text-align:right;">{row["ciro"]:,.2f} TL</div>'
-                f'</div>'
-                for idx, row in top_categories.iterrows()
-            ])}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            """,
+            unsafe_allow_html=True
+        )
+
+    with col1:
+        render_top10_card("📊 En Çok Satan Marka", top_brands[["brand","quantity","ciro"]], "Marka")
+    with col2:
+        render_top10_card("📊 En Çok Satan Kategori", top_categories[["categoryName","quantity","ciro"]], "Kategori")
 
     # ------------------------------
     # 💳 Ürün Kartları
@@ -277,7 +248,7 @@ if st.sidebar.button("Verileri Getir"):
                             border: 1px solid #ddd;
                             text-align: center;">
                             <img src="{row['image']}" width="120" style="border-radius:8px; margin-bottom:10px;">
-                            <p style="color:#333;">{row['productMainId']}</p>
+                            <p style="color:#333; font-weight:bold;">{row['productMainId']}</p>
                             <p style="color:#555;">{row['brand']}</p>
                             <p><b>Satış Adedi:</b> {int(row['quantity'])}</p>
                             <p><b>Ciro:</b> {row['ciro']:,.2f} ₺</p>
