@@ -192,6 +192,10 @@ if st.sidebar.button("Verileri Getir"):
                             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                             border: 1px solid #ddd;
                             text-align: center;">
+                            min-height: 280px;  /* Burayı ihtiyacına göre ayarla */
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;">
                             <img src="{row['image']}" width="120" style="border-radius:8px; margin-bottom:10px;">
                             <h4 style="color:#333;">{row['productMainId']}</h4>
                             <p style="color:#555;">{row['brand']}</p>
