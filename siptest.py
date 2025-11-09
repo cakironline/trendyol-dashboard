@@ -191,7 +191,7 @@ if st.sidebar.button("Verileri Getir"):
                             margin-bottom: 16px;
                             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                             border: 1px solid #ddd;
-                            text-align: center;">
+                            text-align: center;
                             min-height: 280px;  /* Burayı ihtiyacına göre ayarla */
                             display: flex;
                             flex-direction: column;
