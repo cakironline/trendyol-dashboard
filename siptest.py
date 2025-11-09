@@ -191,7 +191,9 @@ if st.sidebar.button("Verileri Getir"):
                             margin-bottom: 16px;
                             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
                             border: 1px solid #ddd;
-                            text-align: center;">
+                            text-align: center;
+                            height: 250px;           /* Sabit yükseklik */
+                            overflow-y: auto;">       /* Dikey scroll */
                             <img src="{row['image']}" width="120" style="border-radius:8px; margin-bottom:10px;">
                             <p style="color:#333;">{row['productMainId']}</p>
                             <p style="color:#555;">{row['brand']}</p>
