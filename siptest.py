@@ -175,6 +175,69 @@ if st.sidebar.button("Verileri Getir"):
 
     st.divider()
 
+    # ------------------------------
+    # 🔝 En Çok Satan Marka ve Kategori (Top 10)
+    # ------------------------------
+    if not df_grouped.empty:
+        # Top 10 Marka
+        top_brands = (
+            df_grouped.groupby("brand", as_index=False)
+            .agg({"quantity": "sum"})
+            .sort_values(by="quantity", ascending=False)
+            .head(10)
+            .reset_index(drop=True)
+        )
+
+        # Top 10 Kategori
+        top_categories = (
+            df_grouped.groupby("categoryName", as_index=False)
+            .agg({"quantity": "sum"})
+            .sort_values(by="quantity", ascending=False)
+            .head(10)
+            .reset_index(drop=True)
+        )
+
+        # Kartları üst kısımda göster
+        col1, col2 = st.columns(2)
+
+        # En Çok Satan Marka Kartı
+        with col1:
+            st.markdown(
+                f"""
+                <div style="
+                    background-color: #ffdede;
+                    border-radius: 16px;
+                    padding: 24px;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h3 style="text-align:center;">🏆 En Çok Satan Marka</h3>
+                    <ol style="padding-left: 20px;">
+                """ + "".join([
+                    f"<li>{row['brand']} {int(row['quantity'])} Adet</li>"
+                    for _, row in top_brands.iterrows()
+                ]) + "</ol></div>",
+                unsafe_allow_html=True
+            )
+
+        # En Çok Satan Kategori Kartı
+        with col2:
+            st.markdown(
+                f"""
+                <div style="
+                    background-color: #def5ff;
+                    border-radius: 16px;
+                    padding: 24px;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h3 style="text-align:center;">🏆 En Çok Satan Kategori</h3>
+                    <ol style="padding-left: 20px;">
+                """ + "".join([
+                    f"<li>{row['categoryName']} {int(row['quantity'])} Adet</li>"
+                    for _, row in top_categories.iterrows()
+                ]) + "</ol></div>",
+                unsafe_allow_html=True
+            )
+
+    st.divider()
+
     # 💳 Ürün Kartları
     for i in range(0, len(df_grouped), 5):
         cols = st.columns(5)
