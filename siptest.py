@@ -52,10 +52,7 @@ end_date = st.sidebar.date_input("Bitiş Tarihi", datetime.now())
 # 🗂️ Sipariş Durumu Seçimi
 # ------------------------------
 st.sidebar.header("Sipariş Durumu")
-status_option = st.sidebar.selectbox(
-    "Durum Seçin",
-    ["All"]
-)
+status_option = st.sidebar.selectbox("Durum Seçin", ["All"])
 
 statuses_to_fetch = (
     ["Created", "Shipped", "Delivered", "Invoiced", "Picking"]
@@ -182,7 +179,7 @@ if st.sidebar.button("Verileri Getir"):
         # Top 10 Marka
         top_brands = (
             df_grouped.groupby("brand", as_index=False)
-            .agg({"quantity": "sum"})
+            .agg({"quantity": "sum", "ciro": "sum"})
             .sort_values(by="quantity", ascending=False)
             .head(10)
             .reset_index(drop=True)
@@ -191,7 +188,7 @@ if st.sidebar.button("Verileri Getir"):
         # Top 10 Kategori
         top_categories = (
             df_grouped.groupby("categoryName", as_index=False)
-            .agg({"quantity": "sum"})
+            .agg({"quantity": "sum", "ciro": "sum"})
             .sort_values(by="quantity", ascending=False)
             .head(10)
             .reset_index(drop=True)
@@ -210,11 +207,13 @@ if st.sidebar.button("Verileri Getir"):
                     padding: 24px;
                     box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                     <h3 style="text-align:center;">🏆 En Çok Satan Marka</h3>
-                    <ol style="padding-left: 20px;">
-                """ + "".join([
-                    f"<li>{row['brand']} {int(row['quantity'])} Adet</li>"
-                    for _, row in top_brands.iterrows()
-                ]) + "</ol></div>",
+                """ +
+                "".join([
+                    f"<p style='margin:4px 0;'>{idx+1} - {row['brand']} | {int(row['quantity'])} Adet | {row['ciro']:,.2f} TL</p>"
+                    f"<hr style='margin:2px 0; border:0.5px solid #ccc;'>"
+                    for idx, row in top_brands.iterrows()
+                ]) +
+                "</div>",
                 unsafe_allow_html=True
             )
 
@@ -228,11 +227,13 @@ if st.sidebar.button("Verileri Getir"):
                     padding: 24px;
                     box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
                     <h3 style="text-align:center;">🏆 En Çok Satan Kategori</h3>
-                    <ol style="padding-left: 20px;">
-                """ + "".join([
-                    f"<li>{row['categoryName']} {int(row['quantity'])} Adet</li>"
-                    for _, row in top_categories.iterrows()
-                ]) + "</ol></div>",
+                """ +
+                "".join([
+                    f"<p style='margin:4px 0;'>{idx+1} - {row['categoryName']} | {int(row['quantity'])} Adet | {row['ciro']:,.2f} TL</p>"
+                    f"<hr style='margin:2px 0; border:0.5px solid #ccc;'>"
+                    for idx, row in top_categories.iterrows()
+                ]) +
+                "</div>",
                 unsafe_allow_html=True
             )
 
@@ -256,7 +257,7 @@ if st.sidebar.button("Verileri Getir"):
                             border: 1px solid #ddd;
                             text-align: center;">
                             <img src="{row['image']}" width="120" style="border-radius:8px; margin-bottom:10px;">
-                            <p style="color:#333;">{row['productMainId']}</p>
+                            <p style="color:#333;"><b>{row['productMainId']}</b></p>
                             <p style="color:#555;">{row['brand']}</p>
                             <p><b>Satış Adedi:</b> {int(row['quantity'])}</p>
                             <p><b>Ciro:</b> {row['ciro']:,.2f} ₺</p>
