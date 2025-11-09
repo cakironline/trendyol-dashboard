@@ -54,7 +54,7 @@ end_date = st.sidebar.date_input("Bitiş Tarihi", datetime.now())
 st.sidebar.header("Sipariş Durumu")
 status_option = st.sidebar.selectbox(
     "Durum Seçin",
-    ["All", "Created", "Shipped", "Delivered", "Cancelled"]
+    ["All"]
 )
 
 statuses_to_fetch = (
