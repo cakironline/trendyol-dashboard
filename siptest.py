@@ -176,8 +176,8 @@ if st.sidebar.button("Verileri Getir"):
     st.divider()
 
     # 💳 Ürün Kartları
-    for i in range(0, len(df_grouped), 3):
-        cols = st.columns(3)
+    for i in range(0, len(df_grouped), 5):
+        cols = st.columns(5)
         for j, col in enumerate(cols):
             if i + j < len(df_grouped):
                 row = df_grouped.iloc[i + j]
