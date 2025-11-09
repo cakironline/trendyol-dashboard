@@ -193,8 +193,8 @@ if st.sidebar.button("Verileri Getir"):
                             border: 1px solid #ddd;
                             text-align: center;">
                             <img src="{row['image']}" width="120" style="border-radius:8px; margin-bottom:10px;">
-                            <h4 style="color:#333;">{row['productMainId']}</h3>
-                            <h5 style="color:#555;">{row['brand']}</h4>
+                            <h4 style="color:#333;">{row['productMainId']}</h4>
+                            <h5 style="color:#555;">{row['brand']}</h5>
                             <p><b>Satış Adedi:</b> {int(row['quantity'])}</p>
                             <p><b>Ciro:</b> {row['ciro']:,.2f} ₺</p>
                             <a href="{row['productUrl']}" target="_blank">🔗 Ürünü Gör</a>
