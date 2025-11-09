@@ -209,7 +209,7 @@ if st.sidebar.button("Verileri Getir"):
                     <h3 style="text-align:center;">🏆 En Çok Satan Marka</h3>
                 """ +
                 "".join([
-                    f"<p style='margin:4px 0;'>{idx+1} - {row['brand']} | {int(row['quantity'])} Adet | {row['ciro']:,.2f} TL</p>"
+                    f"<p style='margin:4px 0; font-size:18px;'>{idx+1} - {row['brand']} | {int(row['quantity'])} Adet | {row['ciro']:,.2f} TL</p>"
                     f"<hr style='margin:2px 0; border:0.5px solid #ccc;'>"
                     for idx, row in top_brands.iterrows()
                 ]) +
@@ -229,7 +229,7 @@ if st.sidebar.button("Verileri Getir"):
                     <h3 style="text-align:center;">🏆 En Çok Satan Kategori</h3>
                 """ +
                 "".join([
-                    f"<p style='margin:4px 0;'>{idx+1} - {row['categoryName']} | {int(row['quantity'])} Adet | {row['ciro']:,.2f} TL</p>"
+                    f"<p style='margin:4px 0; font-size:18px;'>{idx+1} - {row['categoryName']} | {int(row['quantity'])} Adet | {row['ciro']:,.2f} TL</p>"
                     f"<hr style='margin:2px 0; border:0.5px solid #ccc;'>"
                     for idx, row in top_categories.iterrows()
                 ]) +
