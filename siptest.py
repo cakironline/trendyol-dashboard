@@ -196,7 +196,7 @@ if st.sidebar.button("Verileri Getir"):
         st.markdown(
             f"""
             <div style="
-                background-color:#f8f9fa;
+                background-color:#ffc430;
                 border-radius:16px;
                 padding:16px;
                 margin-bottom:20px;
