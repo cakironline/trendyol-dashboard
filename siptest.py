@@ -228,6 +228,8 @@ if st.sidebar.button("Verileri Getir"):
     with col2:
         render_top10_card("📊 En Çok Satan Kategori", top_categories[["categoryName","quantity","ciro"]], "Kategori")
 
+    
+
     # ------------------------------
     # 💳 Ürün Kartları
     # ------------------------------
@@ -236,6 +238,9 @@ if st.sidebar.button("Verileri Getir"):
         for j, col in enumerate(cols):
             if i + j < len(df_grouped):
                 row = df_grouped.iloc[i + j]
+
+                ortalama_fiyat = row['ciro'] / row['quantity'] if row['quantity'] > 0 else 0
+                
                 with col:
                     st.markdown(
                         f"""
@@ -252,6 +257,7 @@ if st.sidebar.button("Verileri Getir"):
                             <p style="color:#555;">{row['brand']}</p>
                             <p><b>Satış Adedi:</b> {int(row['quantity'])}</p>
                             <p><b>Ciro:</b> {row['ciro']:,.2f} ₺</p>
+                            <p><b>Ortalama Fiyat:</b> {ortalama_fiyat:,.2f} ₺</p>
                             <a href="{row['productUrl']}" target="_blank">🔗 Ürünü Gör</a>
                         </div>
                         """,
