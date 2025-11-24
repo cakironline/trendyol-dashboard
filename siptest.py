@@ -212,7 +212,7 @@ if st.sidebar.button("Verileri Getir"):
     col1, col2, col3 = st.columns(3)
     col1.metric("Toplam Ciro", f"{toplam_ciro:,.2f} ₺")
     col2.metric("Toplam Satış Adedi", f"{int(toplam_adet)}")
-    col3.metric("Toplam Ürün Sayısı", f"{toplam_urun}")
+    col3.metric("Toplam Option Sayısı", f"{toplam_urun}")
 
     st.divider()
 
